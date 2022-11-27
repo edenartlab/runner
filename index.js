@@ -180,11 +180,11 @@ app.get("/fetch", handleFetchRequest);
 
 
 app.get("/", async (req, res) => {
-  res.send("Gateway is running yay");
+  res.send("Runner running yay");
 });
 
 app.listen(PORT, () => {
-  console.log(`Gateway listening on port ${PORT} !`);
+  console.log(`Runner is now listening on port ${PORT} !`);
 
   // every 5 minutes
   setInterval(async () => {
