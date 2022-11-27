@@ -30,10 +30,10 @@ import express from 'express';
 import cors from 'cors';
 
 console.log("END BOOTING UP")
-
+let count = 0;
 
 async function handleFetchRequest(req, res) {
-  res.status(200).send("Hello from the server yay!");
+  res.status(200).send(`Hello from the server yay we have ${count}!`);
 }
 
 const app = express();
@@ -45,11 +45,23 @@ app.get("/fetch", handleFetchRequest);
 
 //app.post("/fetch", handleFetchRequest);
 
+
+
 app.get("/", async (req, res) => {
   res.send("Gateway is running yay");
 });
 
 app.listen(PORT, () => {
   console.log(`Gateway listening on port ${PORT} !`);
+
+  // every 5 seconds
+  setInterval(async () => {
+    console.log("FETCHING FROM THE SERVER")
+    count += 1;
+    console.log("RESPONSE: ", response.data)
+  }
+  , 2000);
+
+
 })
   
