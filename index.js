@@ -19,7 +19,10 @@ const API_KEY  = process.env.API_KEY;
 const API_SECRET = process.env.API_SECRET;
 
 
+
 console.log("THE GATEWAY YRP IS: ", GATEWAY_URL)
+
+console.log("THE GATEWAY YRP IS: ", API_KEY)
 
 
 
@@ -41,7 +44,7 @@ app.use(express.urlencoded({limit: '50mb'}));
 app.post("/fetch", handleFetchRequest);
 
 app.get("/", async (req, res) => {
-  res.send("Gateway is running");
+  res.send("Gateway is running yay");
 });
 
 app.listen(PORT, () => {
