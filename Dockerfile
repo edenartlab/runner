@@ -1,11 +1,15 @@
-# syntax=docker/dockerfile:1
-
-FROM python:3.8-slim-buster
+FROM node:19.0.0-alpine as builder
 
 WORKDIR /app
-
 COPY . .
 
+RUN npm ci 
+RUN npm run build
+
+FROM nginx:1.21.0-alpine as production
+ENV NODE_ENV production
+COPY --from=builder /app/build /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 8000
 
-CMD [ "python3", "server.py"]
+CMD ["nginx", "-g", "daemon off;"]
