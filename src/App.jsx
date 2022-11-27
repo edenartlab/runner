@@ -206,7 +206,6 @@ function App() {
         <Tabs.TabPane tab="API Key" key="1">
           <div>
             <br/>&nbsp;<br/>
-            LYq6brWEOKuhrhY72jPG7n5PR5jze1uQ dntM3aDAAefCCKlXsUMj2lCUG1nD5DOO
             API Key: <input type="text" style={{fontSize: "1.05em", width: "300px"}} name="apiKey" placeholder="API Key" required />
             <br/>&nbsp;<br/>
             API Secret: <input type="text" style={{fontSize: "1.05em", width: "300px"}} name="apiSecret" placeholder="API Secret" required />
@@ -247,9 +246,9 @@ function App() {
         </Tabs.TabPane>
         <Tabs.TabPane tab="Real2Real" key="4">
           <div>
-            <br/>&nbsp;<br/>
+            {/* <br/>&nbsp;<br/>
             <span style={{fontSize:"32px"}}>... or ...</span>
-            <br/>&nbsp;<br/>
+            <br/>&nbsp;<br/> */}
             Init Img URL 1: <input type="text" style={{fontSize: "1.2em", width: "1080px"}} name="initimgurl1" placeholder="" required />
             <br/>&nbsp;<br/>
             Init Img URL 2: <input type="text" style={{fontSize: "1.2em", width: "1080px"}} name="initimgurl2" placeholder="" required />
