@@ -41,6 +41,7 @@ collections
 // make EDEN_STABLE_DIFFUSION_URL a secret
 // db -> save both instanceconfig and user config
 
+console.log("BEGIN BOOTING UP")
 
 
 import express from 'express';
@@ -54,7 +55,7 @@ import * as replicate from "./replicate.js";
 import * as eden from "./eden.js";
 import * as collections from "./collections.js";
 
-
+console.log("END BOOTING UP")
 function getCost(generator_name, config) {
   let cost = 0
   if (generator_name == 'stable-diffusion') {
