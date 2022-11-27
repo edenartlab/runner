@@ -178,7 +178,7 @@ app.get("/", async (req, res) => {
   res.send("Runner running yay");
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Runner is now listening on port ${PORT} !`);
   console.log("looping token");
   // every 5 minutes
@@ -188,6 +188,25 @@ app.listen(PORT, () => {
     await run_eden_job();
   }
   , 5*60*1000);
+
+  
+
+
+  setInterval(async function() {
+    let response = await axios.post(GATEWAY_URL+'/fetch', {
+      "taskIds": [prediction_id]
+    });
+    let {status, output} = response.data[0];
+    if (status == 'complete') {
+      let imgUrl = `${MINIO_URL}/${MINIO_BUCKET}/${output}`;
+      console.log(`finished! image at ${imgUrl}`);
+      clearInterval(this);
+    }
+    else if (status == 'failed') {
+      console.log("failed");
+      clearInterval(this);
+    }
+  }, 300000);
 
   console.log("LOOP DONE")
 });
