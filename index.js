@@ -6,7 +6,7 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-const PORT = 80;
+const PORT = 8000;
 const GATEWAY_URL = process.env.GATEWAY_URL;
 
 const MINIO_URL = process.env.MINIO_URL;

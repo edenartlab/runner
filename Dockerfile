@@ -8,6 +8,6 @@ COPY . .
 
 RUN yarn install --frozen-lockfile
 
-EXPOSE 80
+EXPOSE 8000
 
 ENTRYPOINT ["node", "index.js"]
