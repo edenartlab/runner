@@ -110,13 +110,13 @@ async function run_eden_job() {
     "apiSecret": API_SECRET
   };
 
-  let gen_prompt = await createPrompt();
-
-  console.log(gen_prompt);
+  let genPrompt = await createPrompt();
+  let authToken = await getAuthToken(authData);
+  console.log(genPrompt);
 
   let config = {
     "mode": "generate", 
-    "text_input": gen_prompt,
+    "text_input": genPrompt,
     "sampler": "euler_ancestral",
     "scale": 10.0,
     "steps": 50, 
