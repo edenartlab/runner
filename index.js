@@ -1,6 +1,25 @@
 
 console.log("BEGIN BOOTING UP")
 
+import axios from 'axios'
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+const GATEWAY_URL = process.env.GATEWAY_URL;
+const MINIO_URL = process.env.MINIO_URL;
+const MINIO_BUCKET = process.env.MINIO_BUCKET;
+
+// two ways to authenticate:
+
+// 1) API Key
+const API_KEY  = process.env.API_KEY;
+const API_SECRET = process.env.API_SECRET;
+
+
+console.log("THE GATEWAY YRP IS: ", GATEWAY_URL)
+
+
 
 import express from 'express';
 import cors from 'cors';
