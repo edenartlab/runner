@@ -185,19 +185,28 @@ app.listen(PORT, () => {
   console.log(`Runner is now listening on port ${PORT} !`);
   console.log("looping token");
   // every 5 minutes
-  setInterval(async () => {
-    console.log("RUN LOOP", isRunning);
-    count += 1;
-    await sleep(1000);
-    // if (isRunning) {
-    //   await run_eden_job();
-    // }
-    // else {
-    //   console.log("IS NOT RUNNING")
-    //   await sleep(1000);
-    // }
+  // setInterval(async () => {
+  //   console.log("RUN LOOP", isRunning);
+  //   count += 1;
+  //   await sleep(1000);
+  //   // if (isRunning) {
+  //   //   await run_eden_job();
+  //   // }
+  //   // else {
+  //   //   console.log("IS NOT RUNNING")
+  //   //   await sleep(1000);
+  //   // }
     
-  }, 5*60*1000);
+  // }, 5*60*1000);
+
+
+  async function update() {
+    const t1 = new Date();
+    console.log("got time", t1)
+    setTimeout(update, 1000);
+  }
+  update();
+
 
   console.log("LOOP DONE")
 });
