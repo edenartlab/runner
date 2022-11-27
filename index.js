@@ -2,6 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import axios from 'axios'
 import dotenv from 'dotenv'
+import openai from 'openai';
+
+console.log(openai);
+//OpenAIApi
 
 dotenv.config()
 
