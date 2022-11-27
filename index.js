@@ -181,24 +181,26 @@ app.get("/", async (req, res) => {
   res.send("Runner running yay");
 });
 
-app.listen(PORT, async () => {
+app.listen(PORT, () => {
   console.log(`Runner is now listening on port ${PORT} !`);
   console.log("looping token");
   // every 5 minutes
   setInterval(async () => {
-    console.log("RUN LOOP")
+    console.log("RUN LOOP", isRunning);
     count += 1;
-    if (isRunning) {
-      await run_eden_job();
-    }
-    else {
-      console.log("IS NOT RUNNING")
-      await sleep(1000);
-    }
+    await sleep(1000);
+    // if (isRunning) {
+    //   await run_eden_job();
+    // }
+    // else {
+    //   console.log("IS NOT RUNNING")
+    //   await sleep(1000);
+    // }
     
-  }
-  , 5*60*1000);
+  }, 5*60*1000);
 
   console.log("LOOP DONE")
 });
   
+
+console.log("RUNNER DONE")
