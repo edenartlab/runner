@@ -1,39 +1,87 @@
-
-console.log("BEGIN BOOTING UP !!!")
-
+import express from 'express';
+import cors from 'cors';
 import axios from 'axios'
 import dotenv from 'dotenv'
 
 dotenv.config()
 
-const PORT = 8000;
 const GATEWAY_URL = process.env.GATEWAY_URL;
-
 const MINIO_URL = process.env.MINIO_URL;
 const MINIO_BUCKET = process.env.MINIO_BUCKET;
-
-// two ways to authenticate:
-
-// 1) API Key
-const API_KEY  = process.env.API_KEY;
+const API_KEY = process.env.API_KEY;
 const API_SECRET = process.env.API_SECRET;
+const PORT = 8000;
 
-
-
-console.log("THE GATEWAY YRP IS: ", GATEWAY_URL)
-
-console.log("THE GATEWAY YRP IS: ", API_KEY)
-
-
-
-import express from 'express';
-import cors from 'cors';
-
-console.log("END BOOTING UP")
 let count = 0;
 
+async function getAuthToken(data) {
+  let response = await axios.post(GATEWAY_URL+'/sign_in', data)
+  var authToken = response.data.authToken;
+  return authToken;
+}
+
+
+async function startPrediction(data) {
+  let response = await axios.post(GATEWAY_URL+'/request', data)
+  return response;
+}
+
+
+async function run_eden_job() {
+
+  let authData = {
+    "apiKey": API_KEY, 
+    "apiSecret": API_SECRET
+  };
+
+  let config = {
+    "mode": "generate", 
+    "text_input": "The quick brown fox jumps over the lazy dog.",
+    "sampler": "euler_ancestral",
+    "scale": 10.0,
+    "steps": 50, 
+    "width": 512,
+    "height": 512,
+    "seed": Math.floor(1e8 * Math.random())
+  }
+
+  const request = {
+    "token": authToken,
+    "application": "heartbeat", 
+    "generator_name": "stable-diffusion", 
+    "config": config,
+    "metadata": {"count": count}  
+  }
+
+  console.log(request);
+
+  let response = await startPrediction(request);
+  let prediction_id = response.data;
+  console.log(`job submitted, task id ${prediction_id}`);
+
+  // poll every few seconds for update to the job
+  setInterval(async function() {
+    let response = await axios.post(GATEWAY_URL+'/fetch', {
+      "taskIds": [prediction_id]
+    });
+    let {status, output} = response.data[0];
+    if (status == 'complete') {
+      let outputUrl = `${MINIO_URL}/${MINIO_BUCKET}/${output}`;
+      console.log(`finished! result at ${outputUrl}`);
+      clearInterval(this);
+    }
+    else if (status == 'failed') {
+      console.log("failed");
+      clearInterval(this);
+    }
+  }, 2000);
+
+}
+
+
+
 async function handleFetchRequest(req, res) {
-  res.status(200).send(`Hello from the server yay we have ${count}!`);
+  res.status(200).send(`Count ${count}!`);
 }
 
 const app = express();
@@ -58,10 +106,9 @@ app.listen(PORT, () => {
   setInterval(async () => {
     console.log("FETCHING FROM THE SERVER")
     count += 1;
-    console.log("RESPONSE: ", response.data)
   }
   , 2000);
 
 
-})
+});
   
