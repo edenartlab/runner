@@ -1,15 +1,13 @@
-FROM node:19.0.0-alpine as builder
+FROM node:18-alpine
 
-WORKDIR /app
+RUN apk add --no-cache git
+
+WORKDIR /usr/src/app
+
 COPY . .
 
-RUN npm ci 
-RUN npm run build
+RUN yarn install --frozen-lockfile
 
-FROM nginx:1.21.0-alpine as production
-ENV NODE_ENV production
-COPY --from=builder /app/build /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 8000
+EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["node", "index.js"]
