@@ -41,7 +41,9 @@ app.use(cors());
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb'}));
 
-app.post("/fetch", handleFetchRequest);
+app.get("/fetch", handleFetchRequest);
+
+//app.post("/fetch", handleFetchRequest);
 
 app.get("/", async (req, res) => {
   res.send("Gateway is running yay");
