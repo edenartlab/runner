@@ -1,7 +1,7 @@
 //import './App.css';
 import axios from 'axios'
 import React, {useState, useCallback} from 'react';
-import { Tabs, Button, DatePicker } from 'antd';
+import { Tabs } from 'antd';
 
 const GATEWAY_URL = "https://gateway-test.abraham.ai";
 const MINIO_URL = "https://minio.aws.abraham.fun";
