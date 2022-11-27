@@ -28,7 +28,7 @@ async function startPrediction(data) {
 
 
 async function run_eden_job() {
-
+  console.log("RUN EDEN JOB")
   let authData = {
     "apiKey": API_KEY, 
     "apiSecret": API_SECRET
@@ -102,12 +102,13 @@ app.get("/", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Gateway listening on port ${PORT} !`);
 
-  // every 5 seconds
+  // every 5 minutes
   setInterval(async () => {
-    console.log("FETCHING FROM THE SERVER")
+    console.log("RUN LOOP")
     count += 1;
+    run_eden_job();
   }
-  , 2000);
+  , 5*60*1000);
 
 
 });
