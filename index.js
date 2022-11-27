@@ -189,25 +189,6 @@ app.listen(PORT, async () => {
   }
   , 5*60*1000);
 
-  
-
-
-  setInterval(async function() {
-    let response = await axios.post(GATEWAY_URL+'/fetch', {
-      "taskIds": [prediction_id]
-    });
-    let {status, output} = response.data[0];
-    if (status == 'complete') {
-      let imgUrl = `${MINIO_URL}/${MINIO_BUCKET}/${output}`;
-      console.log(`finished! image at ${imgUrl}`);
-      clearInterval(this);
-    }
-    else if (status == 'failed') {
-      console.log("failed");
-      clearInterval(this);
-    }
-  }, 300000);
-
   console.log("LOOP DONE")
 });
   
