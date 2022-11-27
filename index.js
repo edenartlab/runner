@@ -14,6 +14,7 @@ const API_SECRET = process.env.API_SECRET;
 const PORT = 8000;
 
 let count = 0;
+let isRunning = true;
 
 const title_prompt = `A diverse set of highly detailed and imaginative titles of digital artworks I would like to make, one per line
 off-grid cyberpunk vanlife explorer surveying mars oasis
@@ -160,6 +161,8 @@ async function run_eden_job() {
 
 
 async function handleFetchRequest(req, res) {
+  console.log("make isRunning false");
+  isRunning = false;
   res.status(200).send(`Count ${count}!`);
 }
 
@@ -185,7 +188,14 @@ app.listen(PORT, async () => {
   setInterval(async () => {
     console.log("RUN LOOP")
     count += 1;
-    await run_eden_job();
+    if (isRunning) {
+      await run_eden_job();
+    }
+    else {
+      console.log("IS NOT RUNNING")
+      await sleep(1000);
+    }
+    
   }
   , 5*60*1000);
 
