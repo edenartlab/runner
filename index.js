@@ -1,5 +1,5 @@
 
-console.log("BEGIN BOOTING UP")
+console.log("BEGIN BOOTING UP !!!")
 
 import axios from 'axios'
 import dotenv from 'dotenv'
@@ -33,7 +33,7 @@ console.log("END BOOTING UP")
 
 
 async function handleFetchRequest(req, res) {
-  return res.status(200).send("Hello from the server!");
+  res.status(200).send("Hello from the server yay!");
 }
 
 const app = express();
