@@ -4,9 +4,6 @@ import axios from 'axios'
 import dotenv from 'dotenv'
 import openai from 'openai';
 
-console.log(openai);
-//OpenAIApi
-
 dotenv.config()
 
 const GATEWAY_URL = process.env.GATEWAY_URL;
@@ -17,8 +14,6 @@ const API_SECRET = process.env.API_SECRET;
 const PORT = 8000;
 
 let count = 0;
-
-
 
 const title_prompt = `A diverse set of highly detailed and imaginative titles of digital artworks I would like to make, one per line
 off-grid cyberpunk vanlife explorer surveying mars oasis
@@ -50,7 +45,7 @@ Modifiers: album cover, mix of afrofuturism and sōsaku hanga, detailed pencil s
 
 
 async function createPrompt() {
-  
+  console.log("create prompt");
   const configuration = new openai.Configuration({
     apiKey: process.env.OPENAI_API_KEY,
   });
@@ -94,8 +89,6 @@ async function createPrompt() {
 }
 
 
-
-
 async function getAuthToken(data) {
   let response = await axios.post(GATEWAY_URL+'/sign_in', data)
   var authToken = response.data.authToken;
@@ -117,6 +110,8 @@ async function run_eden_job() {
   };
 
   let gen_prompt = await createPrompt();
+
+  console.log(gen_prompt);
 
   let config = {
     "mode": "generate", 
@@ -185,15 +180,15 @@ app.get("/", async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Runner is now listening on port ${PORT} !`);
-
+  console.log("looping token");
   // every 5 minutes
   setInterval(async () => {
     console.log("RUN LOOP")
     count += 1;
-    run_eden_job();
+    await run_eden_job();
   }
   , 5*60*1000);
 
-
+  console.log("LOOP DONE")
 });
   
