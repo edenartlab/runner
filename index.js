@@ -11,10 +11,11 @@ const MINIO_URL = process.env.MINIO_URL;
 const MINIO_BUCKET = process.env.MINIO_BUCKET;
 const API_KEY = process.env.API_KEY;
 const API_SECRET = process.env.API_SECRET;
-const PORT = 8000;
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const PORT = process.env.PORT || 8000;
 
-let count = 0;
-let isRunning = true;
+let nMade = 0;
+let nRunning = 5;
 
 const title_prompt = `A diverse set of highly detailed and imaginative titles of digital artworks I would like to make, one per line
 off-grid cyberpunk vanlife explorer surveying mars oasis
@@ -46,9 +47,9 @@ Modifiers: album cover, mix of afrofuturism and sōsaku hanga, detailed pencil s
 
 
 async function createPrompt() {
-  console.log("create prompt");
+  
   const configuration = new openai.Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
+    apiKey: OPENAI_API_KEY,
   });
   const openai_api = new openai.OpenAIApi(configuration);
 
@@ -103,67 +104,82 @@ async function startPrediction(data) {
 }
 
 
-async function run_eden_job() {
+async function run_eden_jobs(N) {
+  if (N == 0) {
+    return;
+  }
   
   let authData = {
     "apiKey": API_KEY, 
     "apiSecret": API_SECRET
   };
-
-  let genPrompt = await createPrompt();
+  
   let authToken = await getAuthToken(authData);
-  console.log(genPrompt);
 
-  let config = {
-    "mode": "generate", 
-    "text_input": genPrompt,
-    "sampler": "euler_ancestral",
-    "scale": 10.0,
-    "steps": 50, 
-    "width": 512,
-    "height": 512,
-    "seed": Math.floor(1e8 * Math.random())
+  let prompts = [];
+  for (var i = 0; i < N; i++) {
+    let genPrompt = await createPrompt();
+    if (genPrompt) {
+      prompts.push(genPrompt);
+    }
   }
 
-  const request = {
-    "token": authToken,
-    "application": "heartbeat", 
-    "generator_name": "stable-diffusion", 
-    "config": config,
-    "metadata": {"count": count}  
+  let predictions = [];
+
+  for (var i = 0; i < prompts.length; i++) {
+
+    let config = {
+      "mode": "generate", 
+      "text_input": prompts[i],
+      "sampler": "euler_ancestral",
+      "scale": 10.0,
+      "steps": 50, 
+      "width": 512,
+      "height": 512,
+      "seed": Math.floor(1e8 * Math.random())
+    }
+
+    const request = {
+      "token": authToken,
+      "application": "heartbeat", 
+      "generator_name": "stable-diffusion", 
+      "config": config,
+      "metadata": null
+    }
+
+    let response = await startPrediction(request);
+    let prediction_id = response.data;
+    predictions.push(prediction_id);
+    console.log(`job submitted, task id ${prediction_id}`);    
   }
-
-  console.log(request);
-
-  let response = await startPrediction(request);
-  let prediction_id = response.data;
-  console.log(`job submitted, task id ${prediction_id}`);
 
   // poll every few seconds for update to the job
   setInterval(async function() {
     let response = await axios.post(GATEWAY_URL+'/fetch', {
-      "taskIds": [prediction_id]
+      "taskIds": predictions
     });
-    let {status, output} = response.data[0];
-    if (status == 'complete') {
-      let outputUrl = `${MINIO_URL}/${MINIO_BUCKET}/${output}`;
-      console.log(`finished! result at ${outputUrl}`);
-      count += 1;
-      clearInterval(this);
-    }
-    else if (status == 'failed') {
-      console.log("failed");
-      clearInterval(this);
+    for (var i = 0; i < response.data.length; i++) {
+      let {status, output} = response.data[i];
+      if (status == 'complete') {
+        let outputUrl = `${MINIO_URL}/${MINIO_BUCKET}/${output}`;
+        console.log(`finished! result at ${outputUrl}`);
+        nMade = nMade+1;
+        clearInterval(this);
+      }
+      else if (status == 'failed') {
+        console.log("failed");
+        clearInterval(this);
+      }
     }
   }, 10000);
 }
 
 async function handleUpdate(req, res) {
-  const {action, apiKey, apiSecret} = req.body;
+  const {count, apiKey, apiSecret} = req.body;
   console.log(apiKey, apiSecret);
   if (apiKey == API_KEY && apiSecret == API_SECRET) {
-    isRunning = action;
-    res.status(200).send(`IsRunning: ${isRunning}!`);
+    nRunning = count;
+    res.status(200).send(`Number of running threads: ${nRunning}!`);
   } else {
     res.status(401).send(`Not authorized`);
   }
@@ -177,15 +193,13 @@ app.use(express.urlencoded({limit: '50mb'}));
 app.post("/update", handleUpdate);
 
 app.get("/", async (req, res) => {
-  res.send(`Runner has made ${count} creations so far`);
+  res.send(`Runner has made ${nMade} creations so far. ${nRunning} threads are running.`);
 });
 
 app.listen(PORT, () => {
   console.log(`Runner is now listening on port ${PORT} !`);
   async function update() {
-    if (isRunning) {
-      await run_eden_job();
-    }
+    await run_eden_jobs(nRunning);
     setTimeout(update, 300000);
   }
   update();
