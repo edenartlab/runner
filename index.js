@@ -104,7 +104,7 @@ async function startPrediction(data) {
 
 
 async function run_eden_job() {
-  console.log("RUN EDEN JOB")
+  
   let authData = {
     "apiKey": API_KEY, 
     "apiSecret": API_SECRET
@@ -148,22 +148,25 @@ async function run_eden_job() {
     if (status == 'complete') {
       let outputUrl = `${MINIO_URL}/${MINIO_BUCKET}/${output}`;
       console.log(`finished! result at ${outputUrl}`);
+      count += 1;
       clearInterval(this);
     }
     else if (status == 'failed') {
       console.log("failed");
       clearInterval(this);
     }
-  }, 2000);
-
+  }, 10000);
 }
 
-
-
-async function handleFetchRequest(req, res) {
-  console.log("make isRunning false");
-  isRunning = false;
-  res.status(200).send(`Count ${count}!`);
+async function handleUpdate(req, res) {
+  const {action, apiKey, apiSecret} = req.body;
+  console.log(apiKey, apiSecret);
+  if (apiKey == API_KEY && apiSecret == API_SECRET) {
+    isRunning = action;
+    res.status(200).send(`IsRunning: ${isRunning}!`);
+  } else {
+    res.status(401).send(`Not authorized`);
+  }
 }
 
 const app = express();
@@ -171,36 +174,19 @@ app.use(cors());
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb'}));
 
-app.get("/fetch", handleFetchRequest);
-
-//app.post("/fetch", handleFetchRequest);
-
-
+app.post("/update", handleUpdate);
 
 app.get("/", async (req, res) => {
-  res.send("Runner running yay");
+  res.send(`Runner has made ${count} creations so far`);
 });
 
 app.listen(PORT, () => {
   console.log(`Runner is now listening on port ${PORT} !`);
-  console.log("looping token");
-  
   async function update() {
-    
     if (isRunning) {
       await run_eden_job();
     }
-    else {
-      console.log("IS NOT RUNNING")      
-    }
-
     setTimeout(update, 300000);
   }
   update();
-
-
-  console.log("LOOP DONE")
 });
-  
-
-console.log("RUNNER DONE")
