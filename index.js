@@ -15,7 +15,7 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const PORT = process.env.PORT || 8000;
 
 let nMade = 0;
-let nRunning = 5;
+let nRunning = 1;
 
 const title_prompt = `A diverse set of highly detailed and imaginative titles of digital artworks I would like to make, one per line
 off-grid cyberpunk vanlife explorer surveying mars oasis
