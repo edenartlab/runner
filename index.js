@@ -45,6 +45,36 @@ Title: lush tropical forest with strange birdlike creatures patrolling the canop
 Modifiers: album cover, mix of afrofuturism and sōsaku hanga, detailed pencil sketch
 `;
 
+const question_prompt = `A diverse set of highly arresting and vexing philosophical questions, one per line
+what is the meaning of life?
+why should there be any existence at all?
+is there a natural teleology to the universe?
+what is the true nature of consciousness?
+are we living in a simulation?
+`;
+
+
+async function createQuestion() {
+  const configuration = new openai.Configuration({
+    apiKey: OPENAI_API_KEY,
+  });
+  const openai_api = new openai.OpenAIApi(configuration);
+  let question = '';
+  while (question.length == 0) {
+    let completion = await openai_api.createCompletion({
+      model: "text-davinci-002",
+      prompt: question_prompt,
+      temperature: 0.99,
+      max_tokens: 30,
+      top_p: 1,
+      frequency_penalty: 2.0,
+      presence_penalty: 1.0,
+      stop: ["\n"]
+    });
+    question = completion.data.choices[0].text;
+    return question;
+  }
+}
 
 async function createPrompt() {
   
@@ -152,6 +182,26 @@ async function run_eden_jobs(N) {
     predictions.push(prediction_id);
     console.log(`job submitted, task id ${prediction_id}`);    
   }
+
+  // also run oracle once
+  let question = await createQuestion();
+
+  const oracle_config = {
+    "question": question,
+    "voice_embedding": "data/rivka_embedding.pkl",
+    "face": faces[faces_idx]
+  }
+
+  const request = {
+    "token": authToken,
+    "application": "oracle", 
+    "generator_name": "oracle", 
+    "config": oracle_config,
+    "metadata": null
+  }
+  let oracle_response = await startPrediction(request);
+  let oracle_prediction_id = oracle_response.data;
+  console.log(`oracle job submitted, task id ${oracle_prediction_id}`);
 
   // poll every few seconds for update to the job
   setInterval(async function() {
