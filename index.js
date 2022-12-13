@@ -189,7 +189,7 @@ async function run_eden_jobs(N) {
   const oracle_config = {
     "question": question,
     "voice_embedding": "data/rivka_embedding.pkl",
-    "face": faces[faces_idx]
+    "face": "data/oracle.jpg"
   }
 
   const request = {
