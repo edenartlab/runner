@@ -249,7 +249,8 @@ app.get("/", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Runner is now listening on port ${PORT} !`);
   async function update() {
-    await run_eden_jobs(nRunning);
+    //await run_eden_jobs(nRunning);
+    console.log("supposed to run "+nRunning);
     setTimeout(update, 300000);
   }
   update();
