@@ -15,9 +15,11 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const PORT = process.env.PORT || 8000;
 
 let nMade = 0;
-let nRunning = 1;
+let nRunning = 3;
+let nCompletions = 0;
 
-const title_prompt = `A diverse set of highly detailed and imaginative titles of digital artworks I would like to make, one per line
+const title_prompt = `A diverse set of highly detailed and imaginative titles of digital artworks I would like to make, one per line.
+
 off-grid cyberpunk vanlife explorer surveying mars oasis
 photo of holy futuristic cyborg robot painter
 digital illustration of tokyo cityscape
@@ -35,6 +37,7 @@ cybernetic holographic ninja riding a motorcycle with a katana
 `;
 
 const modifier_prompt = `For each title, propose a set of detailed and relevant stylistic modifiers which create a unique aesthetic.
+
 Title: off-grid cyberpunk vanlife explorer surveying mars oasis
 Modifiers: storybook illustration, trending on pixiv, rendered 4k in Octane, raytracing
 Title: epic winged Hippogriff flying over a medieval castle under a dark starred sky
@@ -45,7 +48,8 @@ Title: lush tropical forest with strange birdlike creatures patrolling the canop
 Modifiers: album cover, mix of afrofuturism and sōsaku hanga, detailed pencil sketch
 `;
 
-const question_prompt = `A diverse set of highly arresting and vexing philosophical questions, one per line
+const question_prompt = `A diverse set of highly arresting and vexing philosophical questions, one per line.
+
 what is the meaning of life?
 why should there be any existence at all?
 is there a natural teleology to the universe?
@@ -71,7 +75,9 @@ async function createQuestion() {
       presence_penalty: 1.0,
       stop: ["\n"]
     });
+    nCompletions += 1;
     question = completion.data.choices[0].text;
+    console.log(`complete (${nCompletions}) question: ${question}`)
     return question;
   }
 }
@@ -97,11 +103,16 @@ async function createPrompt() {
       presence_penalty: 1.0,
       stop: ["\n"]
     });
+    nCompletions += 1;
     title = completion.data.choices[0].text;
+    console.log(`complete (${nCompletions}) title: ${title}`)
+    
   }
 
   while (modifiers.length == 0) {
-    const mod_prompt = `${modifier_prompt}\nTitle: ${title}\nModifiers: `
+    const mod_prompt = `${modifier_prompt}Title: ${title}\nModifiers:`
+    // console.log('---')
+    // console.log(mod_prompt)
     let completion = await openai_api.createCompletion({
       model: "text-davinci-002",
       prompt: mod_prompt,
@@ -112,7 +123,10 @@ async function createPrompt() {
       presence_penalty: 1.0,
       stop: ["\n"]
     });    
+    nCompletions += 1;
     modifiers = completion.data.choices[0].text;
+    console.log(`complete (${nCompletions}) modifiers: ${modifiers}`)
+    
   }
 
   const prompt = `${title}, ${modifiers}`
@@ -184,6 +198,7 @@ async function run_eden_jobs(N) {
   }
 
   // also run oracle once
+  /*
   let question = await createQuestion();
 
   const oracle_config = {
@@ -202,7 +217,8 @@ async function run_eden_jobs(N) {
   let oracle_response = await startPrediction(request);
   let oracle_prediction_id = oracle_response.data;
   console.log(`oracle job submitted, task id ${oracle_prediction_id}`);
-
+  */
+ 
   // poll every few seconds for update to the job
   setInterval(async function() {
     let response = await axios.post(GATEWAY_URL+'/fetch', {
@@ -243,15 +259,14 @@ app.use(express.urlencoded({limit: '50mb'}));
 app.post("/update", handleUpdate);
 
 app.get("/", async (req, res) => {
-  res.send(`The Runner has made ${nMade} creations so far. ${nRunning} threads are running.`);
+  res.send(`Runner has made ${nMade} creations so far. ${nRunning} threads are running. Completions ${nCompletions}.`);
 });
 
 app.listen(PORT, () => {
-  console.log(`Runner is listening on port ${PORT} !`);
+  console.log(`Runner is now listening on port ${PORT} !`);
   async function update() {
-    //await run_eden_jobs(nRunning);
-    console.log("supposed to run "+nRunning);
-    //setTimeout(update, 300000);
+    await run_eden_jobs(nRunning);
+    setTimeout(update, 300000);
   }
-  //update();
+  update();
 });
