@@ -243,15 +243,15 @@ app.use(express.urlencoded({limit: '50mb'}));
 app.post("/update", handleUpdate);
 
 app.get("/", async (req, res) => {
-  res.send(`Runner has made ${nMade} creations so far. ${nRunning} threads are running.`);
+  res.send(`The Runner has made ${nMade} creations so far. ${nRunning} threads are running.`);
 });
 
 app.listen(PORT, () => {
-  console.log(`Runner is now listening on port ${PORT} !`);
+  console.log(`Runner is listening on port ${PORT} !`);
   async function update() {
     //await run_eden_jobs(nRunning);
     console.log("supposed to run "+nRunning);
-    setTimeout(update, 300000);
+    //setTimeout(update, 300000);
   }
-  update();
+  //update();
 });
