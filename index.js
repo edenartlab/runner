@@ -14,6 +14,9 @@ const API_SECRET = process.env.API_SECRET;
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const PORT = process.env.PORT || 8000;
 
+// const model_name = "text-davinci-002";
+const model_name = "curie";
+
 let nMade = 0;
 let nRunning = 3;
 let nCompletions = 0;
@@ -66,7 +69,7 @@ async function createQuestion() {
   let question = '';
   while (question.length == 0) {
     let completion = await openai_api.createCompletion({
-      model: "text-davinci-002",
+      model: model_name,
       prompt: question_prompt,
       temperature: 0.99,
       max_tokens: 30,
@@ -94,7 +97,7 @@ async function createPrompt() {
 
   while (title.length == 0) {
     let completion = await openai_api.createCompletion({
-      model: "text-davinci-002",
+      model: model_name,
       prompt: title_prompt,
       temperature: 0.99,
       max_tokens: 60,
@@ -106,15 +109,12 @@ async function createPrompt() {
     nCompletions += 1;
     title = completion.data.choices[0].text;
     console.log(`complete (${nCompletions}) title: ${title}`)
-    
   }
 
   while (modifiers.length == 0) {
     const mod_prompt = `${modifier_prompt}Title: ${title}\nModifiers:`
-    // console.log('---')
-    // console.log(mod_prompt)
     let completion = await openai_api.createCompletion({
-      model: "text-davinci-002",
+      model: model_name,
       prompt: mod_prompt,
       temperature: 0.99,
       max_tokens: 60,
@@ -126,14 +126,19 @@ async function createPrompt() {
     nCompletions += 1;
     modifiers = completion.data.choices[0].text;
     console.log(`complete (${nCompletions}) modifiers: ${modifiers}`)
-    
   }
+
+  title = title.trim();
+  modifiers = modifiers.trim();
 
   const prompt = `${title}, ${modifiers}`
 
   return prompt;
 }
 
+async function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 async function getAuthToken(data) {
   let response = await axios.post(GATEWAY_URL+'/sign_in', data)
@@ -163,6 +168,7 @@ async function run_eden_jobs(N) {
   let prompts = [];
   for (var i = 0; i < N; i++) {
     let genPrompt = await createPrompt();
+    console.log(`PROMPT: ${genPrompt}`)
     if (genPrompt) {
       prompts.push(genPrompt);
     }
@@ -220,7 +226,10 @@ async function run_eden_jobs(N) {
   */
  
   // poll every few seconds for update to the job
-  setInterval(async function() {
+
+  while (predictions.length > 0) {
+    console.log("search")
+    console.log(predictions)
     let response = await axios.post(GATEWAY_URL+'/fetch', {
       "taskIds": predictions
     });
@@ -230,14 +239,16 @@ async function run_eden_jobs(N) {
         let outputUrl = `${MINIO_URL}/${MINIO_BUCKET}/${output}`;
         console.log(`finished! result at ${outputUrl}`);
         nMade = nMade+1;
-        clearInterval(this);
+        predictions.splice(i, 1);
       }
       else if (status == 'failed') {
         console.log("failed");
-        clearInterval(this);
+        predictions.splice(i, 1);
       }
-    }
-  }, 10000);
+    } 
+    await sleep(10000);
+  }
+
 }
 
 async function handleUpdate(req, res) {
@@ -267,6 +278,7 @@ app.listen(PORT, () => {
   async function update() {
     await run_eden_jobs(nRunning);
     setTimeout(update, 300000);
+    await sleep(5000);
   }
   update();
 });
