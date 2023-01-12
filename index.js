@@ -81,7 +81,7 @@ const main = async () => {
   let response = await startPrediction(request);
   let prediction_id = response.data;
   console.log(`job submitted, task id ${prediction_id}`);
-  nCompletions++;
+  nMade++;
 }
 
 
