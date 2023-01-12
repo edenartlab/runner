@@ -49,17 +49,27 @@ const main = async () => {
   
   let authToken = await getAuthToken(authData);
 
+  let sizes = [[512, 512], [640, 640], [768, 480], [800, 576], [768, 512], [800, 512]];
+  let samplers = ["klms", "euler_ancestral", "euler", "klms"];
+
+  let size = sizes[Math.floor(Math.random() * sizes.length)];
+  let sampler = samplers[Math.floor(Math.random() * samplers.length)];
+  let W = size[0];
+  let H = size[1];
+  let scale = 5.0 + 8.0*Math.random();
+
   let config = {
     "mode": "generate", 
     "text_input": prompt,
-    "sampler": "euler_ancestral",
-    "scale": 10.0,
-    "steps": 50, 
-    "width": 512,
-    "height": 512,
+    "sampler": sampler,
+    "scale": scale,
+    "steps": 60, 
+    "width": W,
+    "height": H,
     "seed": Math.floor(1e8 * Math.random())
   }
 
+  console.log(config);
   const request = {
     "token": authToken,
     "application": "heartbeat", 
