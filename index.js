@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import axios from 'axios';
-import {generatePrompts, createPrompt} from './config_generators.js';
+import {generatePrompt} from './config_generators.js';
 
 dotenv.config()
 
