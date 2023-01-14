@@ -25,21 +25,20 @@ async function getAuthToken(data) {
   return authToken;
 }
 
-
 async function startPrediction(data) {
   let response = await axios.post(GATEWAY_URL+'/request', data)
   return response;
 }
 
-
 const main = async () => {
-  const prompts = await generatePrompts(6);
-  const promptString = prompts.join('\n');
+  
+  //const prompts = await generatePrompts(6);
+  //const promptString = prompts.join('\n');
+
   //const prompt = await createPrompt();
 
-  let prompt = await generatePrompts(1);
-  prompt = prompt[0];
-
+  const prompt = await generatePrompt();
+  
   console.log(prompt);
   
   let authData = {
@@ -47,13 +46,20 @@ const main = async () => {
     "apiSecret": API_SECRET
   };
   
-  let authToken = await getAuthToken(authData);
+  try {
+    var authToken = await getAuthToken(authData);
+  } catch (error) {
+    console.error(error);
+    return await sleep(1000);
+  }
 
   let sizes = [[512, 512], [640, 640], [768, 480], [800, 576], [768, 512], [800, 512]];
+  let steps = [50, 60, 60, 80, 100];
   let samplers = ["klms", "euler_ancestral", "euler", "klms"];
 
   let size = sizes[Math.floor(Math.random() * sizes.length)];
   let sampler = samplers[Math.floor(Math.random() * samplers.length)];
+  let numSteps = steps[Math.floor(Math.random() * steps.length)];
   let W = size[0];
   let H = size[1];
   let scale = 5.0 + 8.0*Math.random();
@@ -63,7 +69,7 @@ const main = async () => {
     "text_input": prompt,
     "sampler": sampler,
     "scale": scale,
-    "steps": 60, 
+    "steps": numSteps, 
     "width": W,
     "height": H,
     "seed": Math.floor(1e8 * Math.random())
@@ -78,10 +84,18 @@ const main = async () => {
     "metadata": null
   }
 
-  let response = await startPrediction(request);
-  let prediction_id = response.data;
-  console.log(`job submitted, task id ${prediction_id}`);
-  nMade++;
+  try {
+    let response = await startPrediction(request);
+    let prediction_id = response.data;
+    console.log(`job submitted, task id ${prediction_id}`);
+    nMade++;
+  } catch (error) {
+    console.error(error);
+    await sleep(1000);
+  } finally {
+    await sleep(1000);
+  }
+
 }
 
 
