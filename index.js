@@ -82,16 +82,14 @@ async function handleUpdate(req, res) {
   }
 }
 
+async function status(req, res) {
+  res.send(`Runner has made ${nMade} creations so far. ${nRunning} threads are running. Completions ${nCompletions}.`);
+}
+
 const app = express();
 app.use(cors());
-app.use(express.json({limit: '50mb'}));
-app.use(express.urlencoded({limit: '50mb'}));
-
 app.post("/update", handleUpdate);
-
-app.get("/", async (req, res) => {
-  res.send(`Runner has made ${nMade} creations so far. ${nRunning} threads are running. Completions ${nCompletions}.`);
-});
+app.get("/", status);
 
 app.listen(PORT, () => {
   console.log(`Runner is now listening on port ${PORT} !`);
