@@ -61,7 +61,7 @@ const main = async () => {
       let result = await eden.create("create", config);
       console.log(result);
       nMade++;
-      await sleep(1000 * 60 * 4);
+      await sleep(1000 * 60);
     } catch (error) {
       console.error(error);
       await sleep(1000);
