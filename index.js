@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 8000;
 let eden = new EdenClient(API_KEY, API_SECRET);
 
 let nMade = 0;
-let nRunning = 2;
+let nRunning = 3;
 let nCompletions = 0;
 
 async function sleep(ms) {
@@ -97,7 +97,7 @@ app.listen(PORT, () => {
     for (var i=0; i<nRunning; i++) {
       await main();
     }
-    setTimeout(update, 300000);
+    setTimeout(update, 100000);
     await sleep(5000);
   }
   update();
