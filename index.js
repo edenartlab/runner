@@ -96,7 +96,8 @@ app.listen(PORT, async () => {
     for (var i=0; i<nRunning; i++) {
       await main();
     }
-    await sleep(2.5 * 60 * 1000);
+    setTimeout(update, 300000);
+    await sleep(5000);
   }
   
 });
