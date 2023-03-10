@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 8000;
 let eden = new EdenClient(API_KEY, API_SECRET);
 
 let nMade = 0;
-let nRunning = 2;
+let nRunning = 1;
 let nCompletions = 0;
 
 async function sleep(ms) {
@@ -29,9 +29,10 @@ const main = async () => {
     console.log("==========")
     console.log(prompt)
 
-    let sizes = [[576, 576], [640, 640], [832, 576], [800, 576], [768, 512], [800, 512]];
+    let sizes = [[576, 576], [640, 640], [832, 576], [832, 576], [768, 512], [832, 512], [960, 448], [448, 832], [512, 768], [832, 512]];
     let steps = [100, 120, 80, 90, 100];
-    let samplers = ["euler", "euler_ancestral", "euler", "klms"];
+    //let samplers = ["euler", "euler_ancestral", "euler", "klms"];
+    let samplers = ["euler"];
 
     let size = sizes[Math.floor(Math.random() * sizes.length)];
     if (Math.random() < 0.25) {
@@ -58,16 +59,13 @@ const main = async () => {
     }
 
     try {
-      let result = await eden.create("create", config);
+      let result = await eden.startTask("create", config);
       console.log(result);
       nMade++;
-      await sleep(1000 * 60);
     } catch (error) {
       console.error(error);
-      await sleep(1000);
-    } finally {
-      await sleep(1000);
     }
+    await sleep(2.5 * 60 * 1000);
   }
 }
 
@@ -91,15 +89,15 @@ app.use(cors());
 app.post("/update", handleUpdate);
 app.get("/", status);
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Runner is now listening on port ${PORT} !`);
-  async function update() {
+
+  while (true) {
     for (var i=0; i<nRunning; i++) {
       await main();
     }
-    setTimeout(update, 300000);
-    await sleep(5000);
+    await sleep(2.5 * 60 * 1000);
   }
-  update();
+  
 });
 
