@@ -60,6 +60,7 @@ const main = async () => {
 
     try {
       let result = await eden.startTask("create", config);
+      console.log(config);
       console.log(result);
       nMade++;
     } catch (error) {
