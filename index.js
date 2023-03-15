@@ -66,7 +66,7 @@ const main = async () => {
     } catch (error) {
       console.error(error);
     }
-    await sleep(1 * 60 * 1000);
+    await sleep(2 * 60 * 1000);
   }
 }
 
