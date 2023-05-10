@@ -30,7 +30,7 @@ const main = async () => {
     console.log(prompt)
 
     let sizes = [[576, 576], [640, 640], [832, 576], [832, 576], [768, 512], [832, 512], [960, 448], [448, 832], [512, 768], [832, 512]];
-    let steps = [100, 120, 80, 90, 100];
+    let steps = [60, 85, 80, 70, 90, 100, 60];
     //let samplers = ["euler", "euler_ancestral", "euler", "klms"];
     let samplers = ["euler"];
 
@@ -43,8 +43,8 @@ const main = async () => {
     let numSteps = steps[Math.floor(Math.random() * steps.length)];
     let W = size[0];
     let H = size[1];
-    let scale = 5.0 + 8.0*Math.random();
-    let upscale_f = 1.0 + 1.0*Math.random();
+    let scale = 6.5 + 2.0*Math.random();
+    let upscale_f = 1.25 + 0.75*Math.random();
 
     let config = {
       "mode": "generate", 
