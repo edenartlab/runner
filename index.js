@@ -29,13 +29,13 @@ const main = async () => {
     console.log("==========")
     console.log(prompt)
 
-    let sizes = [[576, 576], [640, 640], [832, 576], [832, 576], [768, 512], [832, 512], [960, 448], [448, 832], [512, 768], [832, 512]];
-    let steps = [60, 85, 80, 70, 90, 100, 60];
+    let sizes = [[768, 768], [960, 960], [960, 640], [1024, 640], [1152, 768]];
+    let steps = [40, 50, 60];
     //let samplers = ["euler", "euler_ancestral", "euler", "klms"];
     let samplers = ["euler"];
 
     let size = sizes[Math.floor(Math.random() * sizes.length)];
-    if (Math.random() < 0.25) {
+    if (Math.random() < 0.33) {
       size = [size[1], size[0]];
     }
 
@@ -44,7 +44,7 @@ const main = async () => {
     let W = size[0];
     let H = size[1];
     let scale = 6.5 + 2.0*Math.random();
-    let upscale_f = 1.25 + 0.75*Math.random();
+    let upscale_f = 1.5;
 
     let config = {
       "mode": "generate", 
