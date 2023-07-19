@@ -75,7 +75,7 @@ export async function generatePrompts() {
     "content": `You help with writer's block for journalists, artists, and other creative intellectuals.`
   },{
     "role": "user",
-    "content": `Give me some kind of artistic or intellectual task, like to explain a scientific concept, write a poem, tell a story, or 
+    "content": `Give me some kind of creative task, like to explain a scientific concept, write a poem, tell a story, or title a set of related artworks.
 
     For example:
     Write a Lord of the Rings style epic novel about a Hobbit-like creature who grows up to become a dark overlord, and is eventually redeemed by his daughter
@@ -97,7 +97,6 @@ export async function generatePrompts() {
   });
   
   const nextTask = response_subject.data.choices[0].message.content;
-  
 
   const messages = [
     {
