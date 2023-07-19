@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import { EdenClient } from "eden-sdk";
+import { EdenClient } from "@edenlabs/eden-sdk";
 import {generatePrompts} from './config_generators.js';
 
 dotenv.config()
@@ -10,7 +10,10 @@ const API_KEY = process.env.EDEN_API_KEY;
 const API_SECRET = process.env.EDEN_API_SECRET;
 const PORT = process.env.PORT || 8000;
 
-let eden = new EdenClient(API_KEY, API_SECRET);
+let eden = new EdenClient({
+  apiKey: API_KEY, 
+  apiSecret: API_SECRET
+});
 
 let nMade = 0;
 let nRunning = 1;
@@ -58,14 +61,17 @@ const main = async () => {
       "upscale_f": upscale_f,
     }
 
-    try {
-      let result = await eden.startTask("create", config);
+    // try {
+      let result = await eden.tasks.create({
+        generatorName: "create",
+        config: config
+      });
       console.log(config);
       console.log(result);
       nMade++;
-    } catch (error) {
-      console.error(error);
-    }
+    // } catch (error) {
+      // console.error(error);
+    // }
     await sleep(2 * 60 * 1000);
   }
 }
