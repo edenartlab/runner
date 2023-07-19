@@ -25,11 +25,11 @@ async function sleep(ms) {
 
 const main = async () => {
 
+  console.log("==========")
   const prompts = await generatePrompts();
   
   for (var i=0; i<prompts.length; i++) {
     let prompt = prompts[i];
-    console.log("==========")
     console.log(prompt)
 
     let sizes = [[768, 768], [960, 960], [960, 640], [1024, 640], [1152, 768]];
@@ -61,18 +61,18 @@ const main = async () => {
       "upscale_f": upscale_f,
     }
 
-    // try {
-      let result = await eden.tasks.create({
+    try {
+      const result = await eden.tasks.create({
         generatorName: "create",
         config: config
       });
       console.log(config);
       console.log(result);
       nMade++;
-    // } catch (error) {
-      // console.error(error);
-    // }
-    await sleep(2 * 60 * 1000);
+    } catch (error) {
+      console.error(error);
+    }
+    await sleep(2.5 * 60 * 1000);
   }
 }
 
