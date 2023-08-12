@@ -123,7 +123,7 @@ export async function generatePrompts() {
       A hobbit goes to battle against a dark evil overlord in a wizard hat
       A brilliant light appears in the forest, illuminating it
       The hobbit triumphs and slays the evil dark overlord in the wizard hat
-      The hobbit and nymph walk together towards the end of the forest and live happily ever after
+      The hobbit and nymph walk together towards the end of the forest and live happily ever after`
     },
     {
       "role": "user", 
@@ -140,7 +140,7 @@ export async function generatePrompts() {
       Advanced aliens leave noticeable marks, like humans on Earth
       Humans cross paths with aliens with advanced technologies      
       Space-faring aliens with advanced technologies bump into each other
-      The universe fills up with space-faring aliens with advanced technologies
+      The universe fills up with space-faring aliens with advanced technologies`
     },
     {
       "role": "user",
@@ -175,6 +175,7 @@ export async function generatePrompts() {
     return `${chapter}, ${genre}`;
   });
 
+  console.log("=================================");
   console.log(nextTask);
   console.log(prompts);
 
