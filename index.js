@@ -30,7 +30,7 @@ const main = async () => {
   
   for (var i=0; i<prompts.length; i++) {
     let prompt = prompts[i];
-    console.log(prompt)
+    //console.log(prompt)
 
     let sizes = [[1024, 1024], [1280, 960], [960, 1280], [1280, 1280], [896, 1536], [1536, 896], [1280, 960]];
     let steps = [40, 50, 40, 30];
@@ -66,8 +66,8 @@ const main = async () => {
         generatorName: "create",
         config: config
       });
-      console.log(config);
-      console.log(result);
+      //console.log(config);
+      //console.log(result);
       nMade++;
     } catch (error) {
       console.error(error);
