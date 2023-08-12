@@ -63,7 +63,6 @@ export async function combinePrompt() {
 
 
 
-
 export async function generatePrompts() {
   const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
@@ -81,7 +80,7 @@ export async function generatePrompts() {
     Write a Lord of the Rings style epic novel about a Hobbit-like creature who grows up to become a dark overlord, and is eventually redeemed by his daughter
     Explain the grabby theory of aliens.
     Write out the sequence of significant evolutionary steps which led from the first life on Earth to modern technological human beings.
-    Write the Lord's Prayer in English in every other century since the 10th century.
+    Write a science fiction screenplay about a detective who discovers a portal to the 11th century
     
     Give me another one. Be concise, just state the task.`
   }]
@@ -104,30 +103,27 @@ export async function generatePrompts() {
       "content": `You are a world-renowned artist who produces original digital artworks. You are immensely creative, original, and eclectic. Humans ask you to make artworks according to some specific, story, or context. You respond with the following:
 
       1) a genre and set of detailed visual characteristics which define the overall story. prefix it with "Genre"
-      2) an ordered set of artwork titles which respond to the prompt and tell a story or otherwise respond to it in a novel way. Prefix this with "Chapters"`},
+      2) an ordered set of artwork titles which respond to the prompt and tell a story or otherwise respond to it in a novel way. Make sure the chapters describe concrete visual content, and are not overly abstract. Be consistent in your descriptions of characters, repeating their most concrete visual elements. Prefix this with "Chapters"`},
     {
       "role": "user",  
       "content": "Write a Lord of the Rings style epic novel about a Hobbit-like creature who grows up to become a dark overlord, and is eventually redeemed by his daughter.",
     },
     {
       "role": "assistant",
-      "content": `1) Genre: Dark fantasy, monochromatic, deep dark blues, 35mm, 2.2 gamma, sony a7r7, tamron 10-24mm f/3.5-4.5
+      "content": `1) Genre: Dark fantasy, deep green, vibrant colors, distortion effects, psychedelic colors, futurism, comic book style, adventure story
 
       2) Chapters:
-      Innocence Awakens
-      A Journey Begins
-      Secrets of the Shadows
-      The Lure of Power
-      Corrupted Descent
-      Crown of Shadows
-      Daughter of Light
-      The Fateful Encounter with the Daughter
-      Clash of the Heirs and Daughter
-      Battles in the Twilight
-      The Vortex of Destiny
-      The Triumph of Light
-      Forgiveness and Daughter's Redemption
-      A New Era Dawns`
+      A hobbit awakens in a lush forest
+      A hobbit walks through a forest, collecting organic mushrooms
+      Two hobbits come upon a secret treasure in a forest
+      A dark evil overlord with a wizard hat appears in a dark twisted corner of the forest
+      A nymph appears in the forest, enchanting the hobbit
+      The hobbit and nymph become friendly and go on an adventure
+      The dark evil overlord in the wizard hat spies upon the hobbit and nymph, plotting vengeance
+      A hobbit goes to battle against a dark evil overlord in a wizard hat
+      A brilliant light appears in the forest, illuminating it
+      The hobbit triumphs and slays the evil dark overlord in the wizard hat
+      The hobbit and nymph walk together towards the end of the forest and live happily ever after
     },
     {
       "role": "user", 
@@ -135,19 +131,16 @@ export async function generatePrompts() {
     },
     {
       "role": "assistant", 
-      "content": `1) Genre: Abstract surrealism, vibrant colors, distortion effects, psychedelic colors, futurism
+      "content": `1) Genre: surrealism, monochromatic, experimental, alien motifs, rendered in Unreal Engine, 4k cinematic HD
 
       2) Chapters:
-      Life is common, a rule rather than an exception
-      Advanced civilizations spread rapidly, like seeds in the wind
-      We're early, the cosmic party's yet to reach full swing
-      We're not unique; if we can, others can too
+      Alien lifeforms with strange eyes teem all over the galaxies
+      Advanced alien spaceships spreading rapidly across the universe
+      A cosmic party is reaching full swing as the nebulae explode
       Advanced aliens leave noticeable marks, like humans on Earth
-      Eventually, we're likely to cross paths with these aliens
-      Tech-savvy civilizations expand swiftly into space
-      Space-faring civilizations are bound to bump into each other
-      Aliens, like us, use up their local resources
-      Unseen does not mean nonexistent; aliens could be beyond observation`
+      Humans cross paths with aliens with advanced technologies      
+      Space-faring aliens with advanced technologies bump into each other
+      The universe fills up with space-faring aliens with advanced technologies
     },
     {
       "role": "user",
