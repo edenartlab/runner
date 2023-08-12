@@ -32,8 +32,8 @@ const main = async () => {
     let prompt = prompts[i];
     console.log(prompt)
 
-    let sizes = [[768, 768], [960, 960], [960, 640], [1024, 640], [1152, 768]];
-    let steps = [40, 50, 60];
+    let sizes = [[1024, 1024], [1280, 960], [960, 1280], [1280, 1280], [896, 1536], [1536, 896], [1280, 960]];
+    let steps = [40, 50, 40, 30];
     //let samplers = ["euler", "euler_ancestral", "euler", "klms"];
     let samplers = ["euler"];
 
