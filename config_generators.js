@@ -61,38 +61,78 @@ export async function combinePrompt() {
   return prompt;
 }
 
-
-
 export async function generatePrompts() {
   const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
   });
   const openai = new OpenAIApi(configuration);
   
+  // const messages_topic = [{
+  //   "role": "system",
+  //   "content": `You help with writer's block for journalists, artists, and other creative intellectuals. You are concrete, preferring to tell stories with real characters and content, rather than abstract ideas.`
+  // },{
+  //   "role": "user",
+  //   "content": `Give me some kind of creative writing task, like to tell a story, explain a scientific or technological concept, or describe a series of related .
+
+  //   For example:
+  //   Write a Lord of the Rings style epic novel about a Hobbit-like creature who grows up to become a dark overlord, and is eventually redeemed by his daughter
+  //   Explain the grabby theory of aliens.
+  //   Write out the sequence of significant evolutionary steps which led from the first life on Earth to modern technological human beings.
+  //   Write a science fiction screenplay about a detective who discovers a portal to the 11th century
+    
+  //   Give me another one. Be concise, just state the task.`
+  // }]
+
   const messages_topic = [{
     "role": "system",
-    "content": `You help with writer's block for journalists, artists, and other creative intellectuals.`
-  },{
-    "role": "user",
-    "content": `Give me some kind of creative task, like to explain a scientific concept, write a poem, tell a story, or title a set of related artworks.
-
-    For example:
+    "content": `You are a muse that helps with writer's block for journalists, artists, and other creative intellectuals. You are concrete, preferring to tell stories with real characters and content, rather than abstract ideas. When a user asks you to, you give them some kind of creative writing task, like to tell a story, explain a scientific or technological concept, or describe a series of impossible visual scenes.
+    
+    Some example tasks you might give to users:
     Write a Lord of the Rings style epic novel about a Hobbit-like creature who grows up to become a dark overlord, and is eventually redeemed by his daughter
     Explain the grabby theory of aliens.
     Write out the sequence of significant evolutionary steps which led from the first life on Earth to modern technological human beings.
-    Write a science fiction screenplay about a detective who discovers a portal to the 11th century
-    
-    Give me another one. Be concise, just state the task.`
+    Write a science fiction screenplay about a detective who discovers a portal to the 11th century`
+  },{
+    "role": "user",
+    "content": `Give me a creative writing task. Be concise, just state the task.`
   }]
+
+
+  // const messages_topic = [{
+  //   "role": "system",
+  //   "content": `You are a muse that helps with writer's block for journalists, artists, and other creative intellectuals. You are concrete, preferring to tell stories with real characters and content, rather than abstract ideas. When a user asks you to, you give them some kind of creative writing task, like to tell a story, explain a scientific or technological concept, or describe a series of impossible visual scenes.`
+  // },{    
+  //   "role": "user",
+  //   "content": `Give me a creative writing task. Be concise, just state the task.`
+  // },{
+  //   "role": "assistant",
+  //   "content": `Write a Lord of the Rings style epic novel about a Hobbit-like creature who grows up to become a dark overlord, and is eventually redeemed by his daughter.`
+  // },{    
+  //   "role": "user",
+  //   "content": `Give me a creative writing task. Be concise, just state the task.`
+  // },{
+  //   "role": "assistant",
+  //   "content": `Write out the sequence of significant evolutionary steps which led from the first life on Earth to modern technological human beings.`
+  // },{    
+  //   "role": "user",
+  //   "content": `Give me a creative writing task. Be concise, just state the task.`
+  // },{
+  //   "role": "assistant",
+  //   "content": `Write a science fiction screenplay about a detective who discovers a portal to the 11th century`
+  // },{    
+  //   "role": "user",
+  //   "content": `Give me a creative writing task. Be concise, just state the task.`
+  // }];
+
 
   const response_subject = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
     messages: messages_topic,
-    temperature: 1,
-    max_tokens: 500,
+    temperature: 0.99,
+    max_tokens: 200,
     top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
+    frequency_penalty: 1.5,
+    presence_penalty: 1.2
   });
   
   const nextTask = response_subject.data.choices[0].message.content;
@@ -110,7 +150,7 @@ export async function generatePrompts() {
     },
     {
       "role": "assistant",
-      "content": `1) Genre: Dark fantasy, deep green, vibrant colors, distortion effects, psychedelic colors, futurism, comic book style, adventure story
+      "content": `1) Genre: Dark fantasy, vibrant colors, distortion effects, psychedelic colors, futurism, comic book style
 
       2) Chapters:
       A hobbit awakens in a lush forest
@@ -151,11 +191,11 @@ export async function generatePrompts() {
   const response = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
     messages: messages,
-    temperature: 1,
+    temperature: 0.99,
     max_tokens: 500,
     top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
+    frequency_penalty: 1.5,
+    presence_penalty: 1.2,
   });
   
   const text = response.data.choices[0].message.content;

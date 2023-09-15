@@ -66,8 +66,8 @@ const main = async () => {
         generatorName: "create",
         config: config
       });
-      //console.log(config);
-      //console.log(result);
+      // console.log(config);
+      // console.log(result);
       nMade++;
     } catch (error) {
       console.error(error);
