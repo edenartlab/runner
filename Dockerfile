@@ -11,6 +11,9 @@ COPY requirements.txt requirements.txt
 RUN --mount=type=cache,target=/root/.cache/pip pip install -r requirements.txt
 
 COPY main.py main.py
+COPY mongo.py mongo.py
+COPY abraham.py abraham.py
+COPY runner.py runner.py
 
 EXPOSE 80
 
