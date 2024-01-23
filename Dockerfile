@@ -1,13 +1,17 @@
-FROM node:18-alpine
+# syntax=docker/dockerfile:1.5
+FROM python:3.10-slim-bookworm as builder
+LABEL org=edenartlab
+WORKDIR /app
 
-RUN apk add --no-cache git
+RUN apt-get update --fix-missing -y \
+      && apt-get install -y --fix-missing git  \
+      && rm -rf /var/lib/apt/lists/*  # Clean up to reduce layer size
 
-WORKDIR /usr/src/app
+COPY requirements.txt requirements.txt
+RUN --mount=type=cache,target=/root/.cache/pip pip install -r requirements.txt
 
-COPY . .
+COPY abraham.py abraham.py
 
-RUN yarn install --frozen-lockfile
+EXPOSE 80
 
-EXPOSE 8000
-
-ENTRYPOINT ["node", "index.js"]
+CMD ["python", "-u", "abraham.py"]

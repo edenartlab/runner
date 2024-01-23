@@ -5,3 +5,4 @@ node_modules
 start.sh
 update.sh
 package-lock.json
+__pycache__
