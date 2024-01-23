@@ -10,8 +10,8 @@ RUN apt-get update --fix-missing -y \
 COPY requirements.txt requirements.txt
 RUN --mount=type=cache,target=/root/.cache/pip pip install -r requirements.txt
 
-COPY abraham.py abraham.py
+COPY main.py main.py
 
 EXPOSE 80
 
-CMD ["python", "-u", "abraham.py"]
+CMD ["python", "-u", "main.py"]
