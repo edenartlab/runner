@@ -2,4 +2,5 @@ python-dotenv
 openai
 pymongo
 Pillow
+replicate
 git+https://github.com/abraham-ai/eden-sdk-py
