@@ -133,7 +133,7 @@ def run_video_heartbeat():
             print(output_url)
         except Exception as e:
             print(e)
-        time.sleep(296)
+        time.sleep(176)
 
 
 # if __name__ == "__main__":
