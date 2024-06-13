@@ -26,7 +26,7 @@ eden.api_key = os.environ['EDEN_API_KEY']
 eden.api_secret = os.environ['EDEN_API_SECRET']
 
 generator_name = "create"
-delay_time = int(4.5 * 60)  # 5 minutes
+delay_time = int(20 * 60)  # 20 minutes
 
 system_message1 = """You are a muse that helps with writer's block for journalists, artists, and other creative intellectuals. You are concrete, preferring to tell stories with real characters and content, rather than abstract ideas. When a user asks you to, you give them some kind of creative writing task, like to tell a story, explain a scientific or technological concept, or describe a series of impossible visual scenes.
 
